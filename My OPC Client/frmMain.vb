@@ -588,6 +588,11 @@ Public Class frmMain
         Next
 
         '''''''XML setting'''''''''''''''''''
+        'Dim _Server As Integer
+        'Dim _Name As String
+        'Dim _Value
+        'Dim _Index As Integer
+
         If IO.File.Exists("MyXML.xml") = False Then
 
             Dim settings As New XmlWriterSettings()
@@ -607,7 +612,7 @@ Public Class frmMain
                 .WriteStartElement("Server")
 
                 ' Start our first person.
-                .WriteStartElement("Folder")
+                .WriteStartElement("Name")
 
                 ' The person nodes.
 
