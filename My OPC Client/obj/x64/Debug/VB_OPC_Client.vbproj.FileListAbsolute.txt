@@ -1,0 +1,10 @@
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\bin\Debug\My OPC Client.exe
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\bin\Debug\My OPC Client.pdb
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\bin\Debug\My OPC Client.xml
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\bin\Debug\Interop.OPCAutomation.dll
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\My_OPC_Client.frmMain.resources
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\My_OPC_Client.Resources.resources
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\VB_OPC_Client.vbproj.GenerateResource.Cache
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\My OPC Client.exe
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\My OPC Client.xml
+C:\Users\kodzhaspirov\Documents\GitHub\testOPCClientVB\My OPC Client\obj\x64\Debug\My OPC Client.pdb

@@ -1,0 +1,16 @@
+My_OPC_Client_v4
+============================
+dibuat oleh: Hadi Hidayat
+Agustus 2014
+hadiScada@gmail.com
+
+
+Ini adalah pengembangan dari projek My OPC Client v3.
+
+Pada versi ini diperbaiki :
++ Reference ke DLL.
++ tombol Read.
+
+
+
+

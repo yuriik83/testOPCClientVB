@@ -1,0 +1,11 @@
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My OPC Client.vbprojResolveAssemblyReference.cache
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My_OPC_Client.Form2.resources
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My_OPC_Client.Resources.resources
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My OPC Client.vbproj.GenerateResource.Cache
+D:\OPC\My_OPC_Client_v4\My OPC Client\bin\Debug\My OPC Client.exe
+D:\OPC\My_OPC_Client_v4\My OPC Client\bin\Debug\My OPC Client.pdb
+D:\OPC\My_OPC_Client_v4\My OPC Client\bin\Debug\My OPC Client.xml
+D:\OPC\My_OPC_Client_v4\My OPC Client\bin\Debug\Interop.OPCAutomation.dll
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My OPC Client.exe
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My OPC Client.xml
+D:\OPC\My_OPC_Client_v4\My OPC Client\obj\x86\Debug\My OPC Client.pdb
