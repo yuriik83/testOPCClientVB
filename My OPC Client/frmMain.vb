@@ -1,4 +1,7 @@
-﻿Imports OPCAutomation
+﻿Imports System.IO
+Imports System.Xml.Serialization
+Imports OPCAutomation
+Imports System.Xml
 
 Public Class frmMain
 
@@ -18,9 +21,9 @@ Public Class frmMain
 
     Public iOPC As Integer
     Public ConnectedServer As Integer = 0
-    Public MonItem_Count As Integer = 0
-    Public MonItem_Name As New List(Of String)
-    Public MonItem_Value As New List(Of VariantType)
+    Public MonitorItem_Count As Integer = 0
+    Public MonitorItem_Name As New List(Of String)
+    Public MonitorItem_Value As New List(Of VariantType)
 
     Structure strOPCServer
 
@@ -30,11 +33,11 @@ Public Class frmMain
         Dim ServerHandles As Array
         Dim Errors As Array
         Dim Values As Array
-        Dim MonCount As Integer
+        Dim MonitorCount As Integer
 
     End Structure
 
-    Structure strcMonItem
+    Structure strcMonitorItem
 
         Dim _Server As Integer
         Dim _Name As String
@@ -44,7 +47,7 @@ Public Class frmMain
 
     End Structure
 
-    Public MonItem() As strcMonItem
+    Public MonitorItem() As strcMonitorItem
 
     Dim treePath As String
     Dim oldCellValue
@@ -71,6 +74,7 @@ Public Class frmMain
             arrOPCServer(iOPC).Server.Connect(lstOPCServer.SelectedNode.Text, txtNode.Text)
 
             If arrOPCServer(iOPC).Server.ServerState = 1 Then
+
                 StatusConnection.Text = "Connected"
                 btnConnect.Enabled = False
                 btnDisconnect.Enabled = True
@@ -80,7 +84,7 @@ Public Class frmMain
                 btnRead.Enabled = True
                 btnWrite.Enabled = True
 
-                lstOPCServer.SelectedNode.ForeColor = Color.Green
+                lstOPCServer.SelectedNode.ForeColor = Color.Red
 
                 lstOPCItems.Items.Clear()
                 lstOPCItems2.Items.Clear()
@@ -101,13 +105,15 @@ Public Class frmMain
                 arrOPCGroup(iOPC).IsSubscribed = True
                 arrOPCGroup(iOPC).UpdateRate = CInt(txtRate.Text)
 
-                AddHandler arrOPCGroup(iOPC).DataChange, AddressOf MyOPCGroup_DataChange
-                AddHandler arrOPCGroup(iOPC).AsyncWriteComplete, AddressOf MyOPCGroup_AsyncWriteComplete
-                AddHandler arrOPCGroup(iOPC).AsyncReadComplete, AddressOf MyOPCGroup_AsyncReadComplete
+                AddHandler arrOPCGroup(iOPC).DataChange, AddressOf OPCGroup_DataChange
+                AddHandler arrOPCGroup(iOPC).AsyncWriteComplete, AddressOf OPCGroup_AsyncWriteComplete
+                AddHandler arrOPCGroup(iOPC).AsyncReadComplete, AddressOf OPCGroup_AsyncReadComplete
 
                 btnBrowseOPCItems_Click(sender, e)
             Else
+
                 StatusConnection.Text = "ERROR Connect!"
+
             End If
 
         Catch ex As Exception
@@ -137,7 +143,7 @@ Public Class frmMain
 
             Next
 
-            Dim okDiskonek As Boolean = True
+            Dim okDisconnected As Boolean = True
 
             For i = 0 To 10
 
@@ -147,7 +153,7 @@ Public Class frmMain
 
                     If arrOPCServer(i).Server.ServerState = 1 Then
 
-                        okDiskonek = False
+                        okDisconnected = False
 
                     End If
 
@@ -155,7 +161,7 @@ Public Class frmMain
 
             Next
 
-            If okDiskonek = True Then
+            If okDisconnected = True Then
 
                 StatusConnection.Text = "Disconnected"
                 btnConnect.Enabled = True
@@ -167,12 +173,12 @@ Public Class frmMain
                 btnAddToMonitoring.Enabled = False
                 btnRead.Enabled = False
                 btnWrite.Enabled = False
-                dataOPC.Enabled = False
+                dgvDataOPC.Enabled = False
                 btnMonitoringOn.Enabled = False
                 btnMonitoringOff.Enabled = False
-                MonItem_Count = 0
+                MonitorItem_Count = 0
 
-            Else
+0:          Else
 
                 StatusConnection.Text = "ERROR Disconnect!"
 
@@ -199,7 +205,7 @@ Public Class frmMain
             btnAddToMonitoring.Enabled = False
             treePath = ""
 
-            If lstOPCServer.SelectedNode.ForeColor <> Color.Green Then
+            If lstOPCServer.SelectedNode.ForeColor <> Color.Red Then
 
                 Exit Sub
 
@@ -216,7 +222,7 @@ Public Class frmMain
             Show_Branches(MyOPCBrowser, treeOPC.SelectedNode)
 
         Catch ex As Exception
-            '
+
         End Try
 
     End Sub
@@ -291,39 +297,41 @@ Public Class frmMain
     End Sub
 
     Private Sub lstOPCItems_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles lstOPCItems.SelectedIndexChanged
+
         If lstOPCItems.SelectedIndex < 0 Then
             btnAddToMonitoring.Enabled = False
         Else
             btnAddToMonitoring.Enabled = True
         End If
+
     End Sub
 
     Private Sub btnAddToMonitoring_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddToMonitoring.Click
 
         Try
 
-            dataOPC.Enabled = True
+            dgvDataOPC.Enabled = True
 
-            Dim indeks = lstOPCItems.SelectedIndex
+            Dim index = lstOPCItems.SelectedIndex
             Dim icount = lstOPCItems.SelectedItems.Count
 
-            For i = indeks To (indeks + icount - 1)
+            For i = index To (index + icount - 1)
 
-                Dim itemName As String '= txtNodeName.Text & itemSel
+                Dim itemName As String
                 itemName = lstOPCItems2.Items(i)
 
-                dataOPC.Rows.Add()
-                dataOPC.Item(0, MonItem_Count).Value = itemName
+                dgvDataOPC.Rows.Add()
+                dgvDataOPC.Item(0, MonitorItem_Count).Value = itemName
 
-                MonItem_Count += 1
+                MonitorItem_Count += 1
 
-                ReDim Preserve MonItem(MonItem_Count)
-                MonItem(MonItem_Count)._Server = iOPC
-                MonItem(MonItem_Count)._Name = itemName
-                MonItem(MonItem_Count)._Index = dataOPC.RowCount - 1
+                ReDim Preserve MonitorItem(MonitorItem_Count)
+                MonitorItem(MonitorItem_Count)._Server = iOPC
+                MonitorItem(MonitorItem_Count)._Name = itemName
+                MonitorItem(MonitorItem_Count)._Index = dgvDataOPC.RowCount - 1
 
-                arrOPCServer(iOPC).Item = arrOPCGroup(iOPC).OPCItems.AddItem(itemName, MonItem_Count)
-                arrOPCServer(iOPC).ServerHandles(MonItem_Count) = arrOPCServer(iOPC).Item.ServerHandle
+                arrOPCServer(iOPC).Item = arrOPCGroup(iOPC).OPCItems.AddItem(itemName, MonitorItem_Count)
+                arrOPCServer(iOPC).ServerHandles(MonitorItem_Count) = arrOPCServer(iOPC).Item.ServerHandle
 
             Next
 
@@ -341,15 +349,17 @@ Public Class frmMain
     End Sub
 
     Private Sub btnRead_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRead.Click
+
         Try
-            If MonItem_Count = 0 Then
+            If MonitorItem_Count = 0 Then
                 SubscribeItems()
             End If
 
-            Dim numItems As Integer = MonItem_Count
+            Dim numItems As Integer = MonitorItem_Count
             arrOPCGroup(iOPC).AsyncRead(numItems, arrOPCServer(iOPC).ServerHandles, arrOPCServer(iOPC).Errors, Second(Now), Second(Now))
 
             StatusCommand.Text = "OK Read"
+
         Catch ex As Exception
             StatusCommand.Text = "ERROR Read - " & ex.Message
         End Try
@@ -358,28 +368,33 @@ Public Class frmMain
 
     Private Sub btnWrite_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnWrite.Click
         Try
-            If MonItem_Count = 0 Then
+
+            If MonitorItem_Count = 0 Then
                 SubscribeItems()
             End If
 
-            Dim ServerHandlesLocal(MonItem_Count) As Integer
-            Dim ValuesLocal(MonItem_Count)
-            Dim ErrorsLocal(MonItem_Count) As Integer
+            Dim ServerHandlesLocal(MonitorItem_Count) As Integer
+            Dim ValuesLocal(MonitorItem_Count)
+            Dim ErrorsLocal(MonitorItem_Count) As Integer
             Dim numItems As Integer = 0
             Dim j As Integer = 1
-            For i = 1 To MonItem_Count
-                If dataOPC.Item(1, i - 1).Style.BackColor = Color.Yellow Then
-                    ValuesLocal(j) = dataOPC.Item(1, i - 1).Value
-                    Dim iServer As Integer = MonItem(i)._Server
+
+            For i = 1 To MonitorItem_Count
+
+                If dgvDataOPC.Item(1, i - 1).Style.BackColor = Color.Yellow Then
+                    ValuesLocal(j) = dgvDataOPC.Item(1, i - 1).Value
+                    Dim iServer As Integer = MonitorItem(i)._Server
                     ServerHandlesLocal(j) = arrOPCServer(iServer).ServerHandles(i)
 
                     arrOPCGroup(iServer).AsyncWrite(1, ServerHandlesLocal, ValuesLocal, arrOPCServer(iServer).Errors, Second(Now), Second(Now))
 
-                    dataOPC.Item(1, i - 1).Style.BackColor = Color.White
+                    dgvDataOPC.Item(1, i - 1).Style.BackColor = Color.White
                 End If
+
             Next
 
             StatusCommand.Text = "OK Write"
+
         Catch ex As Exception
             StatusCommand.Text = "ERROR Write - " & ex.Message
         End Try
@@ -387,72 +402,93 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub dataOPC_CellBeginEdit(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellCancelEventArgs) Handles dataOPC.CellBeginEdit
-        dataOPC.Item(1, e.RowIndex).Style.BackColor = Color.Yellow
+    Private Sub dataOPC_CellBeginEdit(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellCancelEventArgs) Handles dgvDataOPC.CellBeginEdit
+
+        dgvDataOPC.Item(1, e.RowIndex).Style.BackColor = Color.Yellow
+
     End Sub
 
-    Private Sub dataOPC_RowsRemoved(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewRowsRemovedEventArgs) Handles dataOPC.RowsRemoved
-        If dataOPC.Rows.Count > MonItem_Count Or arrOPCServer(iOPC).Server.ServerState <> 1 Then
+    Private Sub dataOPC_RowsRemoved(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewRowsRemovedEventArgs) Handles dgvDataOPC.RowsRemoved
+
+        If dgvDataOPC.Rows.Count > MonitorItem_Count Or arrOPCServer(iOPC).Server.ServerState <> 1 Then
             Exit Sub
         End If
 
         Try
-            MonItem_Count -= 1
-            Dim a As Integer = e.RowIndex
 
+            MonitorItem_Count -= 1
+
+            Dim a As Integer = e.RowIndex
             Dim ServerHandlesLocal(1) As Integer
             Dim iA As Integer = a + 1
-            Dim iServer As Integer = MonItem(iA)._Server
+            Dim iServer As Integer = MonitorItem(iA)._Server
+
             ServerHandlesLocal(1) = arrOPCServer(iServer).ServerHandles(iA)
             arrOPCGroup(iServer).OPCItems.Remove(1, ServerHandlesLocal, arrOPCServer(iServer).Errors)
 
-            For i = iA To dataOPC.RowCount - 1
+            For i = iA To dgvDataOPC.RowCount - 1
+
                 Dim ClientHandlesLocal(1) As Integer
-                iServer = MonItem(i + 1)._Server
+
+                iServer = MonitorItem(i + 1)._Server
                 ServerHandlesLocal(1) = arrOPCServer(iServer).ServerHandles(i + 1)
                 ClientHandlesLocal(1) = i
-                arrOPCGroup(iServer).OPCItems.SetClientHandles(1, ServerHandlesLocal, ClientHandlesLocal, arrOPCServer(iServer).Errors)
 
+                arrOPCGroup(iServer).OPCItems.SetClientHandles(1, ServerHandlesLocal, ClientHandlesLocal, arrOPCServer(iServer).Errors)
                 arrOPCServer(iServer).ServerHandles(i) = arrOPCServer(iServer).ServerHandles(i + 1)
                 arrOPCServer(iServer).Values(i) = arrOPCServer(iServer).Values(i + 1)
 
             Next
+
         Catch ex As Exception
 
         End Try
     End Sub
 
-    Private Sub dataOPC_CellEndEdit(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles dataOPC.CellEndEdit
+    Private Sub dataOPC_CellEndEdit(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles dgvDataOPC.CellEndEdit
+
         Try
+
             Dim i As Integer = e.RowIndex
-            If dataOPC.Item(0, i).Value = "" Then
-                dataOPC.Rows.RemoveAt(i)
+
+            If dgvDataOPC.Item(0, i).Value = "" Then
+
+                dgvDataOPC.Rows.RemoveAt(i)
+
             Else
-                If dataOPC.Item(1, i).Value = arrOPCServer(iOPC).Values(i + 1) Then
-                    dataOPC.Item(1, e.RowIndex).Style.BackColor = Color.White
+
+                If dgvDataOPC.Item(1, i).Value = arrOPCServer(iOPC).Values(i + 1) Then
+                    dgvDataOPC.Item(1, e.RowIndex).Style.BackColor = Color.White
                 End If
+
             End If
+
         Catch ex As Exception
 
         End Try
     End Sub
 
     Private Sub btnMonitoringOn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnMonitoringOn.Click
-        If MonItem_Count = 0 Then
+
+        If MonitorItem_Count = 0 Then
             SubscribeItems()
         End If
 
         For i = 0 To 10
+
             If arrOPCServer(i).Server.ServerState = 1 Then
                 arrOPCGroup(i).IsActive = True
             End If
+
         Next
 
         btnMonitoringOn.Enabled = False
         btnMonitoringOff.Enabled = True
+
     End Sub
 
     Private Sub btnMonitoringOff_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnMonitoringOff.Click
+
         For i = 0 To 10
             If arrOPCServer(i).Server.ServerState = 1 Then
                 arrOPCGroup(i).IsActive = False
@@ -461,60 +497,68 @@ Public Class frmMain
 
         btnMonitoringOn.Enabled = True
         btnMonitoringOff.Enabled = False
+
     End Sub
 
-    Private Sub MyOPCGroup_DataChange(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array)
+    Private Sub OPCGroup_DataChange(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array)
+
         For i = 1 To NumItems
             Dim iHandles As Integer = ClientHandles(i)
-            dataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
-            dataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
+            dgvDataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
+            dgvDataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
         Next
 
         StatusCommand.Text = "OK OnChange"
+
     End Sub
 
-    Private Sub MyOPCGroup_AsyncWriteComplete(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef Errors As System.Array)
+    Private Sub OPCGroup_AsyncWriteComplete(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef Errors As System.Array)
 
     End Sub
 
     Public Sub MyOPCGroups_DataChange(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array) Handles OPCGroups.DataChange, OPCGroup_0.DataChange
+
         For i = 1 To NumItems
             Dim iHandles As Integer = ClientHandles(i)
-            dataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
-            dataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
+            dgvDataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
+            dgvDataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
         Next
 
         StatusCommand.Text = "OK OnChange"
+
     End Sub
 
-    Private Sub MyOPCGroup_AsyncReadComplete(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array, ByRef Errors As System.Array)
+    Private Sub OPCGroup_AsyncReadComplete(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array, ByRef Errors As System.Array)
+
         For i = 1 To NumItems
             Dim iHandles As Integer = ClientHandles(i)
-            dataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
-            dataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
+            dgvDataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
+            dgvDataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
         Next
 
         StatusCommand.Text = "OK AsyncRead"
     End Sub
 
     Public Sub MyOPCGroup_2_DataChange(ByVal TransactionID As Integer, ByVal NumItems As Integer, ByRef ClientHandles As System.Array, ByRef ItemValues As System.Array, ByRef Qualities As System.Array, ByRef TimeStamps As System.Array) Handles OPCGroup_2.DataChange
+
         For i = 1 To NumItems
             Dim iHandles As Integer = ClientHandles(i)
-            dataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
-            dataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
+            dgvDataOPC.Item(1, iHandles - 1).Value = ItemValues(i)
+            dgvDataOPC.Item(1, iHandles - 1).Style.BackColor = Color.White
         Next
 
         StatusCommand.Text = "OK OnChange"
+
     End Sub
 
     Sub SubscribeItems()
 
-        For i = 1 To dataOPC.RowCount - 1
-            Dim itemName As String = MonItem(i)._Name
-            Dim iServer As Integer = MonItem(i)._Server
+        For i = 1 To dgvDataOPC.RowCount - 1
+            Dim itemName As String = MonitorItem(i)._Name
+            Dim iServer As Integer = MonitorItem(i)._Server
             arrOPCServer(iOPC).Item(iServer) = arrOPCServer(iOPC).Group.OPCItems.AddItem(itemName, i)
             arrOPCServer(iOPC).ServerHandles(i) = arrOPCServer(iOPC).Item.ServerHandle
-            MonItem_Count += 1
+            MonitorItem_Count += 1
         Next
 
     End Sub
@@ -525,12 +569,12 @@ Public Class frmMain
             lstOPCServer.Nodes(i).BackColor = Color.White
         Next
 
-        lstOPCServer.SelectedNode.BackColor = Color.Cyan
+        lstOPCServer.SelectedNode.BackColor = Color.Silver
         iOPC = lstOPCServer.SelectedNode.Index
 
     End Sub
 
-    Private Sub Form2_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
         For i = 0 To 10
             arrOPCServer(i).Server = New OPCServer
@@ -543,6 +587,53 @@ Public Class frmMain
             arrOPCServer(i).Values = Array.CreateInstance(GetType(Object), Dims, Bounds)
         Next
 
+        '''''''XML setting'''''''''''''''''''
+        If IO.File.Exists("MyXML.xml") = False Then
+
+            Dim settings As New XmlWriterSettings()
+            settings.Indent = True
+
+            Dim XmlWrt As XmlWriter = XmlWriter.Create("MyXML.xml", settings)
+
+            With XmlWrt
+
+                ' Write the Xml declaration.
+                .WriteStartDocument()
+
+                ' Write a comment.
+                .WriteComment("XML Database.")
+
+                ' Write the root element.
+                .WriteStartElement("Server")
+
+                ' Start our first person.
+                .WriteStartElement("Folder")
+
+                ' The person nodes.
+
+                .WriteStartElement("Item")
+                .WriteString("testItem")
+                .WriteEndElement()
+
+                .WriteStartElement("Monitor")
+                .WriteString("yes")
+                .WriteEndElement()
+
+
+                ' The end of this person.
+                .WriteEndElement()
+
+                ' Close the XmlTextWriter.
+                .WriteEndDocument()
+                .Close()
+
+            End With
+
+            MessageBox.Show("XML file saved.")
+
+        End If
+        ''''''''''''''''''''
+
     End Sub
 
     Private Sub lstOPCServer_NodeMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.TreeNodeMouseClickEventArgs) Handles lstOPCServer.NodeMouseClick
@@ -551,7 +642,7 @@ Public Class frmMain
 
         If e.Button = Windows.Forms.MouseButtons.Right Then
 
-            If lstOPCServer.SelectedNode.ForeColor <> Color.Green Then
+            If lstOPCServer.SelectedNode.ForeColor <> Color.Red Then
 
                 cmsOPCServer.Items(0).Enabled = True
                 cmsOPCServer.Items(1).Enabled = False
@@ -564,6 +655,7 @@ Public Class frmMain
             End If
 
             cmsOPCServer.Show(lstOPCServer, New Point(e.X, e.Y))
+
         Else
 
             btnBrowseOPCItems_Click(sender, e)
@@ -576,7 +668,7 @@ Public Class frmMain
 
         lstOPCServer.SelectedNode = lstOPCServer.GetNodeAt(e.X, e.Y)
 
-        If lstOPCServer.SelectedNode.ForeColor <> Color.Green Then
+        If lstOPCServer.SelectedNode.ForeColor <> Color.Red Then
             btnConnect.Enabled = True
             btnDisconnect.Enabled = False
             btnConnect_Click(sender, e)
@@ -650,8 +742,11 @@ Public Class frmMain
         iA = MyOPCBrowser.Count
 
         For a = 1 To iA
+
             Try
+
                 Dim sName = MyOPCBrowser.Item(a)
+
                 If aNode Is Nothing Then
                     treeOPC.Nodes.Add(sName)
                 Else
@@ -688,4 +783,39 @@ Public Class frmMain
     Private Sub TimerMonitoring_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles TimerMonitoring.Tick
 
     End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btReadXML.Click
+
+        If (IO.File.Exists("MyXML.xml")) Then
+
+            Dim document As XmlReader = New XmlTextReader("MyXML.xml")
+
+            While (document.Read())
+
+                Dim type = document.NodeType
+
+                If (type = XmlNodeType.Element) Then
+
+                    If (document.Name = "FirstName") Then
+
+                        'TextBox1.Text = document.ReadInnerXml.ToString()
+
+                    End If
+
+                    If (document.Name = "LastName") Then
+
+                        'TextBox2.Text = document.ReadInnerXml.ToString()
+
+                    End If
+
+                End If
+
+            End While
+
+        Else
+            MessageBox.Show("The filename you selected was not found.")
+        End If
+
+    End Sub
+
 End Class

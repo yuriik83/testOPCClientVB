@@ -23,9 +23,9 @@ Partial Class frmMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnListOPCServer = New System.Windows.Forms.Button()
         Me.btnConnect = New System.Windows.Forms.Button()
         Me.btnDisconnect = New System.Windows.Forms.Button()
@@ -46,7 +46,7 @@ Partial Class frmMain
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lstOPCServer = New System.Windows.Forms.TreeView()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.dataOPC = New System.Windows.Forms.DataGridView()
+        Me.dgvDataOPC = New System.Windows.Forms.DataGridView()
         Me.ColumnItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtRate = New System.Windows.Forms.TextBox()
@@ -60,10 +60,11 @@ Partial Class frmMain
         Me.cmsOPCServer = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ConnectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DisconnectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btReadXML = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        CType(Me.dataOPC, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvDataOPC, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.cmsOPCServer.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -258,7 +259,8 @@ Partial Class frmMain
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.dataOPC)
+        Me.GroupBox2.Controls.Add(Me.btReadXML)
+        Me.GroupBox2.Controls.Add(Me.dgvDataOPC)
         Me.GroupBox2.Controls.Add(Me.txtRate)
         Me.GroupBox2.Controls.Add(Me.Label4)
         Me.GroupBox2.Controls.Add(Me.Label1)
@@ -273,44 +275,44 @@ Partial Class frmMain
         Me.GroupBox2.TabIndex = 8
         Me.GroupBox2.TabStop = False
         '
-        'dataOPC
+        'dgvDataOPC
         '
-        Me.dataOPC.BackgroundColor = System.Drawing.Color.Beige
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dataOPC.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.dataOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dataOPC.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ColumnItem, Me.ColumnValue})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dataOPC.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dataOPC.Enabled = False
-        Me.dataOPC.GridColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.dataOPC.Location = New System.Drawing.Point(19, 38)
-        Me.dataOPC.Name = "dataOPC"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dataOPC.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dataOPC.RowHeadersWidth = 30
-        Me.dataOPC.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dataOPC.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dataOPC.Size = New System.Drawing.Size(328, 434)
-        Me.dataOPC.TabIndex = 9
+        Me.dgvDataOPC.BackgroundColor = System.Drawing.Color.Beige
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataOPC.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        Me.dgvDataOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDataOPC.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ColumnItem, Me.ColumnValue})
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataOPC.DefaultCellStyle = DataGridViewCellStyle8
+        Me.dgvDataOPC.Enabled = False
+        Me.dgvDataOPC.GridColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.dgvDataOPC.Location = New System.Drawing.Point(19, 38)
+        Me.dgvDataOPC.Name = "dgvDataOPC"
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataOPC.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvDataOPC.RowHeadersWidth = 30
+        Me.dgvDataOPC.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvDataOPC.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataOPC.Size = New System.Drawing.Size(328, 434)
+        Me.dgvDataOPC.TabIndex = 9
         '
         'ColumnItem
         '
@@ -417,6 +419,17 @@ Partial Class frmMain
         Me.DisconnectToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.DisconnectToolStripMenuItem.Text = "Disconnect"
         '
+        'btReadXML
+        '
+        Me.btReadXML.BackColor = System.Drawing.SystemColors.Control
+        Me.btReadXML.Enabled = False
+        Me.btReadXML.Location = New System.Drawing.Point(260, 521)
+        Me.btReadXML.Name = "btReadXML"
+        Me.btReadXML.Size = New System.Drawing.Size(75, 29)
+        Me.btReadXML.TabIndex = 10
+        Me.btReadXML.Text = "XML read"
+        Me.btReadXML.UseVisualStyleBackColor = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -435,7 +448,7 @@ Partial Class frmMain
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        CType(Me.dataOPC, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvDataOPC, System.ComponentModel.ISupportInitialize).EndInit()
         Me.cmsOPCServer.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -459,7 +472,7 @@ Partial Class frmMain
     Friend WithEvents btnRead As System.Windows.Forms.Button
     Friend WithEvents txtNodeName As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents dataOPC As System.Windows.Forms.DataGridView
+    Friend WithEvents dgvDataOPC As System.Windows.Forms.DataGridView
     Friend WithEvents btnWrite As System.Windows.Forms.Button
     Friend WithEvents ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents ToolStripStatusLabel2 As System.Windows.Forms.ToolStripStatusLabel
@@ -475,4 +488,5 @@ Partial Class frmMain
     Friend WithEvents ConnectToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DisconnectToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents lstOPCItems2 As System.Windows.Forms.ListBox
+    Friend WithEvents btReadXML As System.Windows.Forms.Button
 End Class
